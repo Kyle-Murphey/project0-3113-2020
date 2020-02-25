@@ -3,35 +3,26 @@
 #include <stdlib.h>
 
 
-/* separators for tokens/inputs */
-const char SEPARATORS[] = " \t\n";
-
-/* renaming unsigned char to byte */
+/* unsigned char */
 typedef unsigned char byte;
 
 
-int main() {
-    byte buffer[128] = {0}; //buffer to store values in
-    byte input[50]; //stores input from cl
-    byte * args[4]; //stores arguments from input
-    byte ** arg; //pointer to arguments
+int main(int argc, char** argv) {
+    int input;
+    byte buffer[128];
+    int i = 0;
 
     //main input loop, continues until EOF
-    while (fgets(input, 50, stdin))
+    while ((input = fgetc(stdin)) != EOF)
     {
-        //tokenizes input and stores in args array
-        arg = args;
-        *arg++ = strtok(input, SEPARATORS);
-        while((*arg++ = strtok(NULL, SEPARATORS)));
-
-        if(*args[0] == 'i')
+        buffer[i] = (byte)input;
+        if ((input >= 'A' && input <= 'Z') || (input >= 'a' && input <= 'z') || (input >= 0xC0))
         {
-            printf("Yeet\n");
-        } else
-        {
-            break;
+            printf("Char->%c\n", buffer[i]);
         }
+
     }
 
+    printf("%d\n", input);
     return 0;
 }
