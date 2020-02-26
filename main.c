@@ -8,6 +8,7 @@
 /* unsigned char */
 typedef unsigned char byte;
 
+/* structure for our unicode storage. Holds the character and the frequency */
 typedef struct _uni_char
 {
     int count;
@@ -22,8 +23,11 @@ int main(int argc, char** argv) {
     int flag = FALSE;
 
 
+    FILE * file = fopen("test.txt", "r");
+    //file = fopen("test", "r");
+
     //main input loop, continues until EOF
-    while (((input = fgetc(stdin)) != EOF))
+    while (((input = fgetc(file)) != EOF))
     {
         //exit char
         if (input == '$')
@@ -61,10 +65,10 @@ int main(int argc, char** argv) {
             }
         }
 
-        if ((input >= 'A' && input <= 'Z') || (input >= 'a' && input <= 'z') || (input >= 0xC0))
-        {
-            //printf("Char->%c\n", buffer[i++]);
-        }
+        //if ((input >= 'A' && input <= 'Z') || (input >= 'a' && input <= 'z') || (input >= 0xC0))
+        //{
+
+        //}
     }
     // prints the contents of the charArray except the newline char
     for (int i = 0; i < arraySize; ++i)
@@ -76,5 +80,6 @@ int main(int argc, char** argv) {
             printf("Count->%d : Char->%c\n", charArray[i].count, *charArray[i].uni_char);
         }
     }
+    fclose(file);
     return 0;
 }
