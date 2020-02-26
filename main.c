@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
     int flag = FALSE;
 
 
-    FILE * file = fopen("test.txt", "r");
+    FILE * file = fopen("test_uni.txt", "r");
     //file = fopen("test", "r");
 
     //main input loop, continues until EOF
@@ -70,6 +70,7 @@ int main(int argc, char** argv) {
 
         //}
     }
+    fclose(file);
     // prints the contents of the charArray except the newline char
     for (int i = 0; i < arraySize; ++i)
     {
@@ -80,6 +81,5 @@ int main(int argc, char** argv) {
             printf("Count->%d : Char->%c\n", charArray[i].count, *charArray[i].uni_char);
         }
     }
-    fclose(file);
     return 0;
 }
