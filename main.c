@@ -17,6 +17,19 @@ typedef struct _uni_char
     int isUni; // flag whether or not character is unicode
 } _uni_char;
 
+int compare(const void *left, const void *right)
+{
+    const _uni_char *a = (const _uni_char *) left;
+    const _uni_char *b = (const _uni_char *) right;
+
+    if (a->count > b->count)
+        return -1;
+    else if (a->count < b->count)
+        return 1;
+    else
+        return &right - &left;
+}
+
 void storeChar(_uni_char *charArray, int *uniqueChars, int *input, FILE *file, int uniSize)
 {
     int isDuplicate = FALSE;
@@ -89,7 +102,7 @@ int main(int argc, char** argv) {
     //_uni_char charArray[arraySize]; // array of characters
     _uni_char *charArray;
     int uniqueChars = 0; // amount of unique characters
-    FILE * file = fopen("alphatest.txt", "r");
+    FILE * file = fopen("test_uni.txt", "r");
 
     charArray = malloc(arraySize * sizeof(_uni_char));
 
@@ -123,6 +136,8 @@ int main(int argc, char** argv) {
         }
     }
     fclose(file);
+
+    qsort(charArray, uniqueChars, sizeof(_uni_char), compare);
 
     // prints the contents of the charArray except the newline char
     for (int i = 0; i < uniqueChars; ++i)
