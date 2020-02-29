@@ -1,8 +1,8 @@
 Kyle Murphey, Project 0
 
-Compile: gcc -c main.c
+Compile: make all or gcc -c main.c -o main
 
-Run: cat file | ./a.out
+Run: cat file | ./main
 
 Bugs: Any character that is outside the range of values would not get displayed.
 
