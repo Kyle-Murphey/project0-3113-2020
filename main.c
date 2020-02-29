@@ -99,8 +99,7 @@ void storeChar(_uni_char *charArray, int *uniqueChars, int *input, FILE *file, i
 int main(int argc, char** argv) {
     int input; // var used for reading and storing byte
     int arraySize = 23; // size of the array
-    //_uni_char charArray[arraySize]; // array of characters
-    _uni_char *charArray;
+    _uni_char *charArray; // array of characters
     int uniqueChars = 0; // amount of unique characters
     FILE * file = fopen("test_uni.txt", "r");
 
