@@ -1,10 +1,10 @@
-all: main
+all: project0
 
-main.o: main.c
-	gcc -c main.c
+main.o: project0.c
+	gcc -c project0.c
 
-main: main.o
-	gcc main.o -o main
+main: project0.o
+	gcc project0.o -o project0
 
 clean:
-	rm -f *.o main
+	rm -f *.o project0
