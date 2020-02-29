@@ -1,10 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <wchar.h>
 
 #define TRUE 1
 #define FALSE 0
+
+/*
+ *  Project 0
+ * Kyle Murphey
+ * 02/28/20
+ */
 
 /* unsigned char */
 typedef unsigned char byte;
