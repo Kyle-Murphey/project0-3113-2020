@@ -12,12 +12,12 @@ typedef unsigned char byte;
 /* structure for our unicode storage. Holds the character and the frequency */
 typedef struct _uni_char
 {
-    int count;
-    byte uni_char[5];
-    int isUni;
+    int count; // frequency
+    byte uni_char[5]; // character
+    int isUni; // flag whether or not character is unicode
 } _uni_char;
 
-void storeChar(_uni_char charArray[], int *arraySize, int *input, FILE *file, int uniSize)
+void storeChar(_uni_char *charArray, int *uniqueChars, int *input, FILE *file, int uniSize)
 {
     int isDuplicate = FALSE;
     byte inputChar[5] = {0};
@@ -29,15 +29,23 @@ void storeChar(_uni_char charArray[], int *arraySize, int *input, FILE *file, in
         inputChar[i] = (byte)*input;
     }
 
-    if (*arraySize == 0)
+    if (*uniqueChars == 0)
     {
         memset(charArray[0].uni_char, 0, sizeof(charArray[0].uni_char));
         strncpy(charArray[0].uni_char, inputChar, uniSize);
         charArray[0].count = 1;
         charArray[0].isUni = TRUE;
-        ++*arraySize;
-    } else {
-        for(int i = 0; i < *arraySize; ++i)
+
+        if (uniSize > 1)
+            charArray[0].isUni = TRUE;
+        else
+            charArray[0].isUni = FALSE;
+
+        ++*uniqueChars;
+    }
+    else
+    {
+        for (int i = 0; i < *uniqueChars; ++i)
         {
             if (charArray[i].isUni == TRUE)
             {
@@ -47,7 +55,9 @@ void storeChar(_uni_char charArray[], int *arraySize, int *input, FILE *file, in
                     isDuplicate = TRUE;
                     break;
                 }
-            } else {
+            }
+            else
+            {
                 if ((byte)*input == *charArray[i].uni_char)
                 {
                     ++charArray[i].count;
@@ -58,62 +68,84 @@ void storeChar(_uni_char charArray[], int *arraySize, int *input, FILE *file, in
         }
         if (isDuplicate != TRUE)
         {
-            memset(charArray[*arraySize].uni_char, 0, sizeof(charArray[0].uni_char));
-            strncpy(charArray[*arraySize].uni_char, inputChar, uniSize);
-            charArray[*arraySize].count = 1;
-            charArray[*arraySize].isUni = TRUE;
-            ++*arraySize;
+            memset(charArray[*uniqueChars].uni_char, 0, sizeof(charArray[0].uni_char));
+            strncpy(charArray[*uniqueChars].uni_char, inputChar, uniSize);
+            charArray[*uniqueChars].count = 1;
+
+            if (uniSize > 1)
+                charArray[*uniqueChars].isUni = TRUE;
+            else
+                charArray[*uniqueChars].isUni = FALSE;
+
+            ++*uniqueChars;
         }
     }
 }
 
+
 int main(int argc, char** argv) {
-    int input;
-    _uni_char charArray[128];
-    int arraySize = 0;
-    FILE * file = fopen("test_uni.txt", "r");
+    int input; // var used for reading and storing byte
+    int arraySize = 23; // size of the array
+    //_uni_char charArray[arraySize]; // array of characters
+    _uni_char *charArray;
+    int uniqueChars = 0; // amount of unique characters
+    FILE * file = fopen("alphatest.txt", "r");
+
+    charArray = malloc(arraySize * sizeof(_uni_char));
 
     //main input loop, continues until EOF
     while (((input = fgetc(file)) != EOF))
     {
+        if (arraySize - uniqueChars == 1)
+        {
+            arraySize += (int)(arraySize*0.5);
+            charArray = realloc(charArray, (arraySize * sizeof(_uni_char)));
+        }
         //1111 0xxx (4 bytes of unicode)
         if (input >= 0xF0 && input <= 0xF7)
         {
-            storeChar(charArray, &arraySize, &input, file, 4);
+            storeChar(charArray, &uniqueChars, &input, file, 4);
         }
         //1110 xxxx (3 bytes of unicode)
         else if (input >= 0xE0 && input <= 0xEF)
         {
-            storeChar(charArray, &arraySize, &input, file, 3);
+            storeChar(charArray, &uniqueChars, &input, file, 3);
         }
         // 110x xxxx (2 bytes of unicode)
         else if (input >= 0xC0 && input <= 0xDF)
         {
-            storeChar(charArray, &arraySize, &input, file, 2);
+            storeChar(charArray, &uniqueChars, &input, file, 2);
         }
         //other bytes
-        else {
-            storeChar(charArray, &arraySize, &input, file, 1);
+        else
+        {
+            storeChar(charArray, &uniqueChars, &input, file, 1);
         }
     }
     fclose(file);
 
     // prints the contents of the charArray except the newline char
-    for (int i = 0; i < arraySize; ++i)
+    for (int i = 0; i < uniqueChars; ++i)
     {
         if (charArray[i].isUni == FALSE)
         {
             if (*charArray[i].uni_char == '\n' || *charArray[i].uni_char == '\r')
             {
                 continue;
-            } else{
+            }
+            else
+            {
                 printf("%c->%d\n", *charArray[i].uni_char, charArray[i].count);
             }
-        } else {
+        }
+        else
+        {
             if (*charArray[i].uni_char == '\n' || *charArray[i].uni_char == '\r')
             {
                 continue;
-            } else{
+            }
+            else
+            {
                 printf("%s->%d\n", charArray[i].uni_char, charArray[i].count);
             }
         }
